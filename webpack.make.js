@@ -21,11 +21,12 @@ module.exports = function makeWebpackConfig(options) {
    */
   const BUILD = !!options.BUILD;
   const TEST = !!options.TEST;
+  const ENVIRONMENT = options.ENVIRONMENT;
 
   /**
    * Environment values
    */
-  const NODE_ENV = process.env.NODE_ENV || 'development';
+
 
   /**
    * Config
@@ -205,6 +206,10 @@ module.exports = function makeWebpackConfig(options) {
 
     new WebpackNotifierPlugin(),
 
+    new CopyWebpackPlugin([
+        { from: './src/csv', to: './csv' },
+    ]),
+
     // Reference: https://github.com/webpack/extract-text-webpack-plugin
     // Extract css files
     // Disabled when in test mode or not in build mode
@@ -213,10 +218,9 @@ module.exports = function makeWebpackConfig(options) {
     // }),
 
     // Reference: http://webpack.github.io/docs/list-of-plugins.html#defineplugin
-    // Replace process.env.NODE_ENV with NODE_ENV in code
     // Can be used to replace other values as well
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(NODE_ENV) // see: https://github.com/petehunt/webpack-howto for a trick for hiding dev and pre-release features
+      'process.env.NODE_ENV': JSON.stringify(ENVIRONMENT) // see: https://github.com/petehunt/webpack-howto for a trick for hiding dev and pre-release features
     }),
 
     // Reference: https://www.npmjs.com/package/html-webpack-plugin
